@@ -30,21 +30,17 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     for audio_file in audio_list:
         print(f"audio file: {audio_file}")
         if audio_file.is_file():
-            audio_results.append(
-                sample_from_mfcc(
-                    read_mfcc(audio_file, SAMPLE_RATE), NUM_FRAMES
-                )
-            )
+            audio_results.append(run_model_evaluation(audio_file, model))
 
         else:
             return 0
 
-    predict_001 = model.rescnn.predict(np.expand_dims(audio_results[0], axis=0))
-    predict_002 = model.rescnn.predict(np.expand_dims(audio_results[1], axis=0))
-    predict_003 = model.rescnn.predict(np.expand_dims(audio_results[2], axis=0))
+    #predict_001 = model.rescnn.predict(np.expand_dims(audio_results[0], axis=0))
+    #predict_002 = model.rescnn.predict(np.expand_dims(audio_results[1], axis=0))
+    #predict_003 = model.rescnn.predict(np.expand_dims(audio_results[2], axis=0))
 
-    s1_to_s1 = batch_cosine_similarity(predict_001, predict_002)
-    s1_to_s2 = batch_cosine_similarity(predict_001, predict_003)
+    s1_to_s1 = batch_cosine_similarity(audio_results[0], audio_results[1])
+    s1_to_s2 = batch_cosine_similarity(audio_results[0], audio_results[2])
 
     if to_csv == True:
         append_results_to_csv((speaker_1, speaker_2), (s1_to_s1, s1_to_s2))
@@ -55,6 +51,12 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
 
     results = [s1_to_s1, s1_to_s2]
     return results
+
+def run_model_evaluation(audio_input, model):
+    mfcc = sample_from_mfcc(read_mfcc(audio_input, SAMPLE_RATE), NUM_FRAMES)
+    prediction = model.rescnn.predict(np.expand_dims(mfcc, axis=0))
+    return prediction
+
 
 
 def batch_cosine_similarity(x1, x2):
