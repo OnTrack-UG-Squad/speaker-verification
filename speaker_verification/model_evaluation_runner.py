@@ -1,4 +1,5 @@
 import argparse
+from os.path import join, abspath, dirname
 import csv
 import pathlib
 from random import seed
@@ -9,13 +10,14 @@ import pytest
 from rescnn_model import DeepSpeakerModel
 from audio import NUM_FRAMES, NUM_FBANKS, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 
+model_path = join(abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5")
 
 def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     np.random.seed(123)
     seed(123)
 
     model = DeepSpeakerModel()
-    model.rescnn.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    model.rescnn.load_weights(model_path, by_name=True)
     dataset_path = (
         "../../datasets/VCTK_Corpus_Fileshare/VCTK_Corpus/wav48_silence_trimmed"
     )
