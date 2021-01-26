@@ -35,10 +35,6 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
         else:
             return 0
 
-    #predict_001 = model.rescnn.predict(np.expand_dims(audio_results[0], axis=0))
-    #predict_002 = model.rescnn.predict(np.expand_dims(audio_results[1], axis=0))
-    #predict_003 = model.rescnn.predict(np.expand_dims(audio_results[2], axis=0))
-
     s1_to_s1 = batch_cosine_similarity(audio_results[0], audio_results[1])
     s1_to_s2 = batch_cosine_similarity(audio_results[0], audio_results[2])
 
@@ -52,11 +48,22 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     results = [s1_to_s1, s1_to_s2]
     return results
 
-def run_model_evaluation(audio_input, model):
-    mfcc = sample_from_mfcc(read_mfcc(audio_input, SAMPLE_RATE), NUM_FRAMES)
+def run_model_evaluation(audio_input, model, raw_audio=False):
+    if raw_audio == True:
+        mfcc = sample_from_mfcc(read_mfcc(audio_input, SAMPLE_RATE), NUM_FRAMES)
+    else:
+        mfcc = audio_input
     prediction = model.rescnn.predict(np.expand_dims(mfcc, axis=0))
     return prediction
 
+
+def run_user_evaluation(enrolment_mfcc, input_audio):
+    model = DeepSpeakerModel()
+    model.rescnn.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    enrolment_evaluation = run_model_evaluation(enrolment_mfcc, model)
+    input_evaluation = run_model_evaluation(input_audio, model, raw_audio=True)
+
+    return batch_cosine_similarity(enrolment_evaluation, input_evaluation)
 
 
 def batch_cosine_similarity(x1, x2):
