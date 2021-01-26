@@ -1,36 +1,45 @@
 import argparse
-from subprocess import Popen
-import sqlite3
-import numpy as np
-import io
 
 from model_evaluation_runner import run_user_evaluation
 from audio import sample_from_mfcc, read_mfcc, SAMPLE_RATE, NUM_FRAMES
 from sql_utils import select_db_row, insert_db_row, create_db_table
 
 
+def validate_id(id):
+    """assert that input id is castable to int and 9 characters long."""
+    try:
+        val = int(id)
+        assert len(id) == 9
+    except ValueError:
+        print("User Input Not a Valid ID.")
+        raise
+    except AssertionError:
+        print("User Input Not a Valid length. ID must have a length of 9.")
+        raise
+
+
 def enroll_new_user(args):
+    validate_id(args.id)
     mfcc = sample_from_mfcc(read_mfcc(args.audio_path, SAMPLE_RATE), NUM_FRAMES)
-    current_user = {"id": args.id, "mfcc": mfcc}
-    insert_db_row("users", current_user["id"], current_user["mfcc"])
+    insert_db_row("users", args.id, mfcc)
 
 
 def validate_user(args):
+    validate_id(args.id)
     user_row = select_db_row("users", args.id)
     mfcc = user_row[1]
     score = run_user_evaluation(mfcc, args.audio_path)
+    print("score: ", score)
 
 
 parser = argparse.ArgumentParser(
-    description="Process new user enrollment for speaker verification validation"
+    description="A cli tool for enrolling and running speaker verification on registered users."
 )
 
 parser.add_argument(
-    "--id", type=str, required=True, help="User identifying name for a new user.",
+    "--id", type=str, required=True, help="User identification for a new user.",
 )
-parser.add_argument(
-    "--password", type=str, help="User identifying password for new user.",
-)
+
 parser.add_argument(
     "--audio-path",
     type=str,
@@ -41,12 +50,12 @@ parser.add_argument(
 subparsers = parser.add_subparsers()
 
 enrollment_parser = subparsers.add_parser(
-    "enrollment", help="Process new user enrollment for speaker verification"
+    "enroll", help="Process new user enrolment for speaker verification"
 )
 enrollment_parser.set_defaults(func=enroll_new_user)
 
 validation_parser = subparsers.add_parser(
-    "validate", help="Validate user based off enrollment for speaker verification"
+    "validate", help="Validate user based off enrolment for speaker verification"
 )
 validation_parser.set_defaults(func=validate_user)
 
