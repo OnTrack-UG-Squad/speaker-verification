@@ -1,4 +1,5 @@
 import io
+from os.path import abspath, dirname, join
 import sqlite3
 
 import numpy as np
@@ -19,6 +20,7 @@ def convert_array(text):
     out.seek(0)
     return np.load(out)
 
+database_path = join(abspath(dirname(__file__)), "SQL", "sqlite.db")
 
 # Converts np.array to TEXT when inserting
 sqlite3.register_adapter(np.ndarray, adapt_array)
@@ -29,7 +31,7 @@ sqlite3.register_converter("array", convert_array)
 
 def readSqliteTable():
     try:
-        sqliteConnection = sqlite3.connect("sqlite.db")
+        sqliteConnection = sqlite3.connect(database_path)
         cur = sqliteConnection.cursor()
 
         sqlite_select_query = "select * from users"
@@ -52,7 +54,7 @@ def create_db_table(table, id, mfcc):
 
 def remove_db_row(table, id):
     try:
-        with sqlite3.connect("sqlite.db", detect_types=sqlite3.PARSE_DECLTYPES) as con:
+        with sqlite3.connect(database_path, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
             cur.execute(f"delete from {table} where id={id}")
 
@@ -62,7 +64,7 @@ def remove_db_row(table, id):
 
 def select_db_row(table, id):
     try:
-        with sqlite3.connect("sqlite.db", detect_types=sqlite3.PARSE_DECLTYPES) as con:
+        with sqlite3.connect(database_path, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
 
             rows = cur.execute(f"select * from {table} where id={id}")
@@ -77,7 +79,7 @@ def select_db_row(table, id):
 
 def insert_db_row(table, id, mfcc):
     try:
-        with sqlite3.connect("sqlite.db", detect_types=sqlite3.PARSE_DECLTYPES) as con:
+        with sqlite3.connect(database_path, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
             cur.execute(f"insert into {table}(id, mfcc) values (?, ?)", (id, mfcc,))
     except Exception as err:

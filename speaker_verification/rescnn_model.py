@@ -24,7 +24,7 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
-from audio import NUM_FBANKS, NUM_FRAMES
+from speaker_verification.audio import NUM_FBANKS, NUM_FRAMES
 
 logger = logging.getLogger(__name__)
 

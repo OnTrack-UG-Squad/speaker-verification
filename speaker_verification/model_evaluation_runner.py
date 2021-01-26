@@ -1,4 +1,5 @@
 import argparse
+from os.path import join, abspath, dirname
 import csv
 import pathlib
 from random import seed
@@ -6,16 +7,17 @@ from random import seed
 import numpy as np
 import pytest
 
-from audio import NUM_FBANKS, NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
-from rescnn_model import DeepSpeakerModel
+from speaker_verification.audio import NUM_FBANKS, NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
+from speaker_verification.rescnn_model import DeepSpeakerModel
 
+model_path = join(abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5")
 
 def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     np.random.seed(123)
     seed(123)
 
     model = DeepSpeakerModel()
-    model.rescnn.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    model.rescnn.load_weights(model_path, by_name=True)
     dataset_path = (
         "../../datasets/VCTK_Corpus_Fileshare/VCTK_Corpus/wav48_silence_trimmed"
     )
@@ -60,7 +62,7 @@ def run_model_evaluation(audio_input, model, raw_audio=False):
 
 def run_user_evaluation(enrolment_mfcc, input_audio):
     model = DeepSpeakerModel()
-    model.rescnn.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    model.rescnn.load_weights(model_path, by_name=True)
     enrolment_evaluation = run_model_evaluation(enrolment_mfcc, model)
     input_evaluation = run_model_evaluation(input_audio, model, raw_audio=True)
 
