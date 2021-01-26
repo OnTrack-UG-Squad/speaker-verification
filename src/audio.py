@@ -9,8 +9,8 @@
 import logging
 import os
 from collections import defaultdict
-from pathlib import Path
 from glob import glob
+from pathlib import Path
 from random import choice
 
 import librosa
@@ -18,11 +18,10 @@ import numpy as np
 from python_speech_features import fbank
 from tqdm import tqdm
 
-
 logger = logging.getLogger(__name__)
 # not higher than that otherwise we may have errors when computing the fbanks.
 SAMPLE_RATE = 16000
-NUM_FRAMES = 300 # 1 second ~ 100 frames with default params winlen=0.025,winstep=0.01
+NUM_FRAMES = 300  # 1 second ~ 100 frames with default params winlen=0.025,winstep=0.01
 NUM_FBANKS = 64
 
 

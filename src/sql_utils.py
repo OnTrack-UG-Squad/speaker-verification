@@ -1,6 +1,7 @@
-import sqlite3
-import numpy as np
 import io
+import sqlite3
+
+import numpy as np
 
 
 def adapt_array(arr):
@@ -48,6 +49,7 @@ def readSqliteTable():
 def create_db_table(table, id, mfcc):
     cur.execute(f"create table {table}(id integer primary key, arr array)")
 
+
 def remove_db_row(table, id):
     try:
         with sqlite3.connect("sqlite.db", detect_types=sqlite3.PARSE_DECLTYPES) as con:
@@ -55,7 +57,7 @@ def remove_db_row(table, id):
             cur.execute(f"delete from {table} where id={id}")
 
     except Exception as err:
-         print(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
+        print(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
 
 
 def select_db_row(table, id):
@@ -63,9 +65,7 @@ def select_db_row(table, id):
         with sqlite3.connect("sqlite.db", detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
 
-            row = cur.execute(f"select * from {table} where id={id}")
-            rows = cur.fetchall()
-            print("rows")
+            rows = cur.execute(f"select * from {table} where id={id}")
             for row in rows:
                 print("Id: ", row[0])
                 print("mfcc: ", row[1])
