@@ -1,8 +1,8 @@
 import argparse
 
+from audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from model_evaluation_runner import run_user_evaluation
-from audio import sample_from_mfcc, read_mfcc, SAMPLE_RATE, NUM_FRAMES
-from sql_utils import select_db_row, insert_db_row, create_db_table
+from sql_utils import create_db_table, insert_db_row, select_db_row
 
 
 def validate_id(id):
@@ -10,6 +10,7 @@ def validate_id(id):
     try:
         val = int(id)
         assert len(id) == 9
+
     except ValueError:
         print("User Input Not a Valid ID.")
         raise

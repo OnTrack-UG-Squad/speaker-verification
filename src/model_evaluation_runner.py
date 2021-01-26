@@ -6,8 +6,8 @@ from random import seed
 import numpy as np
 import pytest
 
+from audio import NUM_FBANKS, NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from rescnn_model import DeepSpeakerModel
-from audio import NUM_FRAMES, NUM_FBANKS, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 
 
 def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
@@ -47,6 +47,7 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
 
     results = [s1_to_s1, s1_to_s2]
     return results
+
 
 def run_model_evaluation(audio_input, model, raw_audio=False):
     if raw_audio == True:
