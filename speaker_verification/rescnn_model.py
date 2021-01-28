@@ -3,18 +3,20 @@ import os
 
 import numpy as np
 import tensorflow.keras.backend as K
-from tensorflow.keras import layers
-from tensorflow.keras import regularizers
-from tensorflow.keras.layers import BatchNormalization
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import Input
-from tensorflow.keras.layers import Lambda, Dense
-from tensorflow.keras.layers import Reshape
+from tensorflow.keras import layers, regularizers
+from tensorflow.keras.layers import (
+    BatchNormalization,
+    Conv2D,
+    Dense,
+    Dropout,
+    Input,
+    Lambda,
+    Reshape,
+)
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
-from audio import NUM_FRAMES, NUM_FBANKS
+from speaker_verification.audio import NUM_FBANKS, NUM_FRAMES
 
 logger = logging.getLogger(__name__)
 
@@ -117,4 +119,3 @@ class DeepSpeakerModel:
         for layer, layer_w in zip(self.m.layers, w):
             layer.set_weights(layer_w)
             logger.info(f"Setting weights for [{layer.name}]...")
-

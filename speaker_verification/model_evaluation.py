@@ -1,4 +1,5 @@
 import argparse
+from os.path import join, abspath, dirname
 import csv
 import pathlib
 from random import seed
@@ -6,16 +7,17 @@ from random import seed
 import numpy as np
 import pytest
 
-from rescnn_model import DeepSpeakerModel
-from audio import NUM_FRAMES, NUM_FBANKS, SAMPLE_RATE, read_mfcc, sample_from_mfcc
+from speaker_verification.audio import NUM_FBANKS, NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
+from speaker_verification.rescnn_model import DeepSpeakerModel
 
+model_path = join(abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5")
 
 def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     np.random.seed(123)
     seed(123)
 
     model = DeepSpeakerModel()
-    model.rescnn.load_weights("ResCNN_triplet_training_checkpoint_265.h5", by_name=True)
+    model.rescnn.load_weights(model_path, by_name=True)
     dataset_path = (
         "../../datasets/VCTK_Corpus_Fileshare/VCTK_Corpus/wav48_silence_trimmed"
     )
@@ -35,10 +37,6 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
         else:
             return 0
 
-    #predict_001 = model.rescnn.predict(np.expand_dims(audio_results[0], axis=0))
-    #predict_002 = model.rescnn.predict(np.expand_dims(audio_results[1], axis=0))
-    #predict_003 = model.rescnn.predict(np.expand_dims(audio_results[2], axis=0))
-
     s1_to_s1 = batch_cosine_similarity(audio_results[0], audio_results[1])
     s1_to_s2 = batch_cosine_similarity(audio_results[0], audio_results[2])
 
@@ -52,11 +50,23 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     results = [s1_to_s1, s1_to_s2]
     return results
 
-def run_model_evaluation(audio_input, model):
-    mfcc = sample_from_mfcc(read_mfcc(audio_input, SAMPLE_RATE), NUM_FRAMES)
+
+def run_model_evaluation(audio_input, model, raw_audio=False):
+    if raw_audio == True:
+        mfcc = sample_from_mfcc(read_mfcc(audio_input, SAMPLE_RATE), NUM_FRAMES)
+    else:
+        mfcc = audio_input
     prediction = model.rescnn.predict(np.expand_dims(mfcc, axis=0))
     return prediction
 
+
+def run_user_evaluation(enrolment_mfcc, input_audio):
+    model = DeepSpeakerModel()
+    model.rescnn.load_weights(model_path, by_name=True)
+    enrolment_evaluation = run_model_evaluation(enrolment_mfcc, model)
+    input_evaluation = run_model_evaluation(input_audio, model, raw_audio=True)
+
+    return batch_cosine_similarity(enrolment_evaluation, input_evaluation)
 
 
 def batch_cosine_similarity(x1, x2):
