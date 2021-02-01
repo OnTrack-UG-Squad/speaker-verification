@@ -1,5 +1,4 @@
 import logging
-import os
 
 import numpy as np
 import tensorflow.keras.backend as K
@@ -8,13 +7,11 @@ from tensorflow.keras.layers import (
     BatchNormalization,
     Conv2D,
     Dense,
-    Dropout,
     Input,
     Lambda,
     Reshape,
 )
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
 
 from speaker_verification.audio import NUM_FBANKS, NUM_FRAMES
 
