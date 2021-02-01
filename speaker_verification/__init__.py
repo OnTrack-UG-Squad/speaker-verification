@@ -6,7 +6,7 @@ from speaker_verification.sql_utils import create_db_table, insert_db_row, selec
 def validate_id(id):
     """assert that input id is castable to int and 9 characters long."""
     try:
-        val = int(id)
+        int(id)
         assert len(id) == 9
 
     except ValueError:
@@ -30,4 +30,3 @@ def validate_user(args):
     score = run_user_evaluation(mfcc, args.audio_path)
     print(f"User evaluation for {args.id} has a confidence of:")
     print(f"{round(score[0]*100, 2)}%")
-

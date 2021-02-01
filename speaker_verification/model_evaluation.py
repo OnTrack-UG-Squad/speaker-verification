@@ -2,26 +2,29 @@ import argparse
 from os.path import join, abspath, dirname
 import csv
 import pathlib
-from random import seed
 
 import numpy as np
-import pytest
 
-from speaker_verification.audio import NUM_FBANKS, NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
+from speaker_verification.audio import (
+    NUM_FRAMES,
+    SAMPLE_RATE,
+    read_mfcc,
+    sample_from_mfcc,
+)
 from speaker_verification.rescnn_model import DeepSpeakerModel
 
 
-MODEL_PATH = join(abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5")
+MODEL_PATH = join(
+    abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5"
+)
+
 
 def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     np.random.seed(123)
-    seed(123)
 
     model = DeepSpeakerModel()
     model.rescnn.load_weights(MODEL_PATH, by_name=True)
-    dataset_path = (
-        "/home/aidan/dev/machine_learning/datasets/VCTK_Corpus_Fileshare/VCTK_Corpus/wav48_silence_trimmed/"
-    )
+    dataset_path = "/home/aidan/dev/machine_learning/datasets/VCTK_Corpus_Fileshare/VCTK_Corpus/wav48_silence_trimmed/"
     audio_list = [
         pathlib.Path(f"{dataset_path}/{speaker_1}/{speaker_1}_004_mic1.flac"),
         pathlib.Path(f"{dataset_path}/{speaker_1}/{speaker_1}_008_mic1.flac"),
@@ -40,7 +43,7 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
     s1_to_s1 = batch_cosine_similarity(audio_results[0], audio_results[1])
     s1_to_s2 = batch_cosine_similarity(audio_results[0], audio_results[2])
 
-    if to_csv == True:
+    if to_csv is True:
         append_results_to_csv((speaker_1, speaker_2), (s1_to_s1, s1_to_s2))
     else:
         print(f"{speaker_1} and {speaker_2} complete")
@@ -49,7 +52,7 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
 
 
 def run_model_evaluation(audio_input, model, raw_audio=False):
-    if raw_audio == True:
+    if raw_audio is True:
         mfcc = sample_from_mfcc(read_mfcc(audio_input, SAMPLE_RATE), NUM_FRAMES)
     else:
         mfcc = audio_input
@@ -107,7 +110,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.run_all == True:
+    if args.run_all is True:
         for i in range(255, 360):
             run_VCSK_Corpus_data(f"p{i}", f"p{i+1}", args.to_csv)
 

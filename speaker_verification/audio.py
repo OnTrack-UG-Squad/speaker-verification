@@ -8,20 +8,16 @@
 
 import logging
 import os
-from collections import defaultdict
 from glob import glob
-from pathlib import Path
 from random import choice
 
 import librosa
 import numpy as np
 from python_speech_features import fbank
-from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
-# not higher than that otherwise we may have errors when computing the fbanks.
 SAMPLE_RATE = 16000
-NUM_FRAMES = 300  # 1 second ~ 100 frames with default params winlen=0.025,winstep=0.01
+NUM_FRAMES = 300
 NUM_FBANKS = 64
 
 
@@ -34,7 +30,7 @@ def sample_from_mfcc(mfcc, max_length):
     return np.expand_dims(s, axis=-1)
 
 
-def pad_mfcc(mfcc, max_length):  # num_frames, nfilt=64.
+def pad_mfcc(mfcc, max_length):
     if len(mfcc) < max_length:
         mfcc = np.vstack(
             (mfcc, np.tile(np.zeros(mfcc.shape[1]), (max_length - len(mfcc), 1)))
@@ -62,12 +58,7 @@ def mfcc_fbank(signal: np.array, sample_rate: int):  # 1D signal array.
     # Returns MFCC with shape (num_frames, n_filters, 3).
     filter_banks, energies = fbank(signal, samplerate=sample_rate, nfilt=NUM_FBANKS)
     frames_features = normalize_frames(filter_banks)
-    # delta_1 = delta(filter_banks, N=1)
-    # delta_2 = delta(delta_1, N=1)
-    # frames_features = np.transpose(np.stack([filter_banks, delta_1, delta_2]), (1, 2, 0))
-    return np.array(
-        frames_features, dtype=np.float32
-    )  # Float32 precision is enough here.i
+    return np.array(frames_features, dtype=np.float32)
 
 
 def normalize_frames(m, epsilon=1e-12):
