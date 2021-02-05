@@ -1,4 +1,4 @@
-from speaker_verification.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
+from speaker_verification.deep_speaker.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from speaker_verification.model_evaluation import run_user_evaluation
 from speaker_verification.sql_utils import create_db_table, insert_db_row, select_db_row
 

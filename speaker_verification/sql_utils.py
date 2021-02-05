@@ -24,14 +24,11 @@ def convert_array(text):
     return np.load(out)
 
 
-# Converts np.array to TEXT when inserting
 sqlite3.register_adapter(np.ndarray, adapt_array)
-
-# Converts TEXT to np.array when selecting
 sqlite3.register_converter("array", convert_array)
 
 
-def readSqliteTable():
+def read_sqlite_table():
     try:
         sqliteConnection = sqlite3.connect(DATABASE_PATH)
         cur = sqliteConnection.cursor()

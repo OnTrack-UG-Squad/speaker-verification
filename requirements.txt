@@ -1,0 +1,9 @@
+# To be installed against python=3.7/3.8
+audioread==2.1.9
+Keras==2.3.1
+librosa==0.7.2
+numba==0.48.0
+numpy==1.18.5
+python-speech-features==0.6
+tensorflow>=2.1.0
+pytest

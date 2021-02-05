@@ -5,13 +5,13 @@ import pathlib
 
 import numpy as np
 
-from speaker_verification.audio import (
+from speaker_verification.deep_speaker.audio import (
     NUM_FRAMES,
     SAMPLE_RATE,
     read_mfcc,
     sample_from_mfcc,
 )
-from speaker_verification.rescnn_model import DeepSpeakerModel
+from speaker_verification.deep_speaker.rescnn_model import DeepSpeakerModel
 
 
 MODEL_PATH = join(
@@ -19,12 +19,11 @@ MODEL_PATH = join(
 )
 
 
-def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv):
+def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv, dataset_path):
     np.random.seed(123)
 
     model = DeepSpeakerModel()
     model.rescnn.load_weights(MODEL_PATH, by_name=True)
-    dataset_path = "/home/aidan/dev/machine_learning/datasets/VCTK_Corpus_Fileshare/VCTK_Corpus/wav48_silence_trimmed/"
     audio_list = [
         pathlib.Path(f"{dataset_path}/{speaker_1}/{speaker_1}_004_mic1.flac"),
         pathlib.Path(f"{dataset_path}/{speaker_1}/{speaker_1}_008_mic1.flac"),
@@ -109,10 +108,10 @@ if __name__ == "__main__":
         "--to_csv", type=bool, default=False, help="Append all results to csv file."
     )
     args = parser.parse_args()
-
+    dataset_path = "INSERT_PATH_HERE"
     if args.run_all is True:
         for i in range(255, 360):
-            run_VCSK_Corpus_data(f"p{i}", f"p{i+1}", args.to_csv)
+            run_VCSK_Corpus_data(f"p{i}", f"p{i+1}", args.to_csv, dataset_path)
 
     else:
-        run_VCSK_Corpus_data(args.speaker_1, args.speaker_2, args.to_csv)
+        run_VCSK_Corpus_data(args.speaker_1, args.speaker_2, args.to_csv, dataset_path)
