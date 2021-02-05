@@ -5,13 +5,13 @@ import pathlib
 
 import numpy as np
 
-from speaker_verification.audio import (
+from speaker_verification.deep_speaker.audio import (
     NUM_FRAMES,
     SAMPLE_RATE,
     read_mfcc,
     sample_from_mfcc,
 )
-from speaker_verification.rescnn_model import DeepSpeakerModel
+from speaker_verification.deep_speaker.rescnn_model import DeepSpeakerModel
 
 
 MODEL_PATH = join(
