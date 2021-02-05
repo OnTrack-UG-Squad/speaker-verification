@@ -8,7 +8,7 @@ from speaker_verification.model_evaluation import (
     run_model_evaluation,
     batch_cosine_similarity,
 )
-from speaker_verification.rescnn_model import DeepSpeakerModel
+from speaker_verification.deep_speaker.rescnn_model import DeepSpeakerModel
 
 
 TEST_PATH = join(abspath(dirname(__file__)), "input")
