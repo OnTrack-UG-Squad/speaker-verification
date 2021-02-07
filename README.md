@@ -1,4 +1,4 @@
-![Project CI](https://github.com/OnTrack-UG-Squad/speech_verification_public/workflows/.github/workflows/python-ci.yml/badge.svg)
+![Python CI](https://github.com/OnTrack-UG-Squad/speech_verification_public/workflows/Python%20CI/badge.svg)
 ![CodeQL](https://github.com/OnTrack-UG-Squad/speech_verification_public/workflows/CodeQL/badge.svg)
 
 # speaker-verification
