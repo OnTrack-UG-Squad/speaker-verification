@@ -1,3 +1,5 @@
+![Project CI](https://github.com/OnTrack-UG-Squad/speech_verification_public/workflows/.github/workflows/python-ci.yml/badge.svg)
+
 # speaker-verification
 
 A Research-focuses POC for in-house speaker verification
