@@ -3,9 +3,48 @@
 This project aims to address the issues concerning contract cheating within online learning management platforms as educational institutions have struggled to monitor and evaluate online activity.
 The Speaker Verification project aims to utilize machine learning technologies to evaluate audio files submitted from a user and obtain a confidence score of how likely it is that the voice in the recording is the user in question.
 
-## Install Instructions
+## Table of Contents
+
+
+* [Usage](#usage)
+    - [Enroll stage](#enroll-stage)
+    - [Validate stage](#validate-stage)
+* [Installation](#installation)
+    - [Installing Miniconda](#installing-miniconda)
+    - [Conda environment](#conda-environment)
+    - [Virtualenv environment](#virtualenv-environment)
+* [Testing](#testing)
+
+
+## Usage
+
+The speaker_verification tool has a enroll and validate workflow in order to perform speaker verification for a given user.
+
+### Enroll stage
+
+The enroll workflow requires two parameters, one being a unique numeric id that must be 9 characters long and a path to a wav or flac file of the users voice. Below is the required syntax and format for the this stage.
+
+```bash
+python -m speaker_verification enroll --id <ID_NUMBER> --audio-path <PATH/TO/FILE>
+```
+
+### Validate stage
+
+The validate workflow retrives a user enrollment based on the given id parameter given and then uses the `--audio-path` input to accept an audio file as speaker input to verify against the given user enrollment.
+
+```bash
+python -m speaker_verification validate --id <ID_NUMBER> --audio-path <PATH/TO/FILE>
+```
+
+## Installation
 
 This project has both a `requirements.txt` and `environment.yml` file's, it is up to your discretion of what environment manager you should like to use.
+
+The repository relies on the `speaker_verification` python module being on the `PYTHONPATH` which you should set before running.
+
+```bash
+export PYTHONPATH=${PYTHONPATH}:/path/to/speech_verification_public/
+```
 
 ### Installing miniconda
 
@@ -38,26 +77,6 @@ python37 -m virtualenv ./env_name
 source ./env_name/bin/activate
 # install environment dependencies by pointing to requirements.txt file
 pip install -r requrements.txt
-```
-
-## Usage
-
-The speaker_verification tool has a enroll and validate workflow in order to perform speaker verification for a given user.
-
-### Enroll stage
-
-The enroll workflow requires two parameters, one being a unique numeric id that must be 9 characters long and a path to a wav or flac file of the users voice. Below is the required syntax and format for the this stage.
-
-```bash
-python -m speaker_verification enroll --id <ID_NUMBER> --audio-path <PATH/TO/FILE>
-```
-
-### Validate stage
-
-The validate workflow retrives a user enrollment based on the given id parameter given and then uses the `--audio-path` input to accept an audio file as speaker input to verify against the given user enrollment.
-
-```bash
-python -m speaker_verification validate --id <ID_NUMBER> --audio-path <PATH/TO/FILE>
 ```
 
 ## Testing
