@@ -5,7 +5,8 @@
     See the original project here:
     https://github.com/philipperemy/deep-speaker/
 """
-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # hide tensorflow warnings before import
 import logging
 
 import numpy as np
@@ -22,6 +23,7 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.models import Model
 
 from speaker_verification.deep_speaker.audio import NUM_FBANKS, NUM_FRAMES
+
 
 logger = logging.getLogger(__name__)
 
