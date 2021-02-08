@@ -28,16 +28,23 @@ sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
 
 
-def read_sqlite_table():
+def read_sqlite_table(table):
+    """read_sqlite_table.
+
+    print all records within users table.
+
+    Parameters
+    ----------
+    table : str
+        Name of table to remove record from.
+    """
     try:
         sqliteConnection = sqlite3.connect(DATABASE_PATH)
         cur = sqliteConnection.cursor()
 
-        sqlite_select_query = "select * from users"
+        sqlite_select_query = f"select * from {table}"
         cur.execute(sqlite_select_query)
         records = cur.fetchall()
-        print("Total rows are:  ", len(records))
-        print("Printing each row")
         for row in records:
             print("Id: ", row[0])
             print("mfcc: ", type(row[1]))
@@ -47,7 +54,16 @@ def read_sqlite_table():
         print("Failed to read data from sqlite table", error)
 
 
-def create_db_table(table, id, mfcc):
+def create_db_table(table):
+    """create_db_table.
+
+    Creates a table within sqlite database to store user records.
+
+    Parameters
+    ----------
+    table : str
+        Name of table to create.
+    """
     try:
         with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
@@ -57,6 +73,17 @@ def create_db_table(table, id, mfcc):
 
 
 def remove_db_row(table, id):
+    """remove_db_row.
+
+    Removes row within sqlite table according to "id" and "table" parameters.
+
+    Parameters
+    ----------
+    table : str
+        Name of table to remove record from.
+    id : str
+        Id key for required record within table for removal.
+    """
     try:
         with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
@@ -67,6 +94,17 @@ def remove_db_row(table, id):
 
 
 def select_db_row(table, id):
+    """select_db_row.
+
+    Selects and prints out a row within a registered sqlite database table.
+
+    Parameters
+    ----------
+    table : str
+        Name of table to select record from.
+    id : str
+        Id key for required record within table for selection.
+    """
     try:
         with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
@@ -82,6 +120,19 @@ def select_db_row(table, id):
 
 
 def insert_db_row(table, id, mfcc):
+    """insert_db_row.
+
+    Takes required parameters and inserts a record of given id and mfcc dataset into the sqlite database table specified.
+
+    Parameters
+    ----------
+    table : str
+        Name of table to insert record within.
+    id : str
+        Id key for required record within table for insertion.
+    mfcc : numpy.array
+        MFCC dataset to be inserted within database records.
+    """
     try:
         with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()

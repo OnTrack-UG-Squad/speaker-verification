@@ -9,6 +9,8 @@ This project has both a `requirements.txt` and `environment.yml` file's, it is u
 
 ### Installing miniconda
 
+`Miniconda` is a minimal install for conda which hosts packages from `PyPi`, `zlib` and other packages outside of the python language.
+
 Download the relevent [miniconda installation here](https://docs.conda.io/en/latest/miniconda.html#linux-installers) for     your specified OS.
 
 NOTE: If you are developing on windows then Anaconda might be a better option.
@@ -17,7 +19,7 @@ You should be able to install the rest with the [conda.io instructions](https://
 
 ### Conda environment
 
-Install the python dependencies in a conda virtual environmenti called `deep-speaker` by using the `environmet.yml`file to point to the required dependencies.
+Install the python dependencies in a conda virtual environment called `deep-speaker` by using the `environment.yml`file to point to the required dependencies.
  
 ```bash
 conda env create -f environment.yml
@@ -25,6 +27,9 @@ conda activate deep-speaker
 ```
 
 ### Virtualenv environment
+
+Like `miniconda`, `virtualenv` is an virual environment manager for python which uses [PyPi (Python Package Index)](https://pypi.org/) packages distributed by pip.
+
 ```bash
 pip install virtualenv
 # create a new environment, usually in your home dir

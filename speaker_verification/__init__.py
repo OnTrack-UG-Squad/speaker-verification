@@ -18,12 +18,30 @@ def validate_id(id):
 
 
 def enroll_new_user(args):
+    """
+    enroll_new_user requires a unique meric id with a length of 9 characters and a path to a
+    wav/flac file of the users voice.
+
+    Parameters
+    ----------
+    args : str
+        Commandline arguments passed with argparse. Required arguments are args.id and args.audio_path
+    """
     validate_id(args.id)
     mfcc = sample_from_mfcc(read_mfcc(args.audio_path, SAMPLE_RATE), NUM_FRAMES)
     insert_db_row("users", args.id, mfcc)
 
 
 def validate_user(args):
+    """
+    validate_user retrives a user enrollment based on the args.id parameter and uses args.audio_path to
+    accept an audio file as speaker input to verify against the id enrollment.
+
+    Parameters
+    ----------
+    args : str
+        Commandline arguments passed with argparse. Required arguments are args.id and args.audio_path
+    """
     validate_id(args.id)
     user_row = select_db_row("users", args.id)
     mfcc = user_row[1]
