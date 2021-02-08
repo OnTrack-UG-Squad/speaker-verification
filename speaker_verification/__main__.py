@@ -1,34 +1,66 @@
 import argparse
 from speaker_verification import enroll_new_user, validate_user
 
-if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(
-        description="A cli tool for enrolling and running speaker verification on registered users."
+def add_enrollment_args(subparser):
+    enrollment_parser = subparsers.add_parser(
+        "enroll",
+        help="enroll help",
+        description="Process new user enrolment for speaker verification"
+
     )
+    enrollment_parser.set_defaults(func=enroll_new_user)
 
-    parser.add_argument(
+    enrollment_parser.add_argument(
         "--id", type=str, required=True, help="User identification for a new user.",
     )
 
-    parser.add_argument(
+    enrollment_parser.add_argument(
         "--audio-path",
         type=str,
         required=True,
         help="Path to enrollment audio, required for baseline verification.",
     )
 
-    subparsers = parser.add_subparsers()
+    return enrollment_parser
 
-    enrollment_parser = subparsers.add_parser(
-        "enroll", help="Process new user enrolment for speaker verification"
-    )
-    enrollment_parser.set_defaults(func=enroll_new_user)
 
+def add_verification_args(subparser):
     validation_parser = subparsers.add_parser(
-        "validate", help="Validate user based off enrolment for speaker verification"
+        "validate",
+        help="validate help",
+        description= "Validate user based off enrolment for speaker verification"
     )
     validation_parser.set_defaults(func=validate_user)
+
+    validation_parser.add_argument(
+        "-i",
+        "--id",
+        type=str,
+        required=True,
+        help="User identification for a registered user.",
+    )
+
+    validation_parser.add_argument(
+        "-a",
+        "--audio-path",
+        type=str,
+        required=True,
+        help="Path to verification audio, required for verification against enrollment audio.",
+    )
+
+    return validation_parser
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(
+        description="A CLI tool for enrollment and validation on registered users for speaker verification."
+    )
+    subparsers = parser.add_subparsers()
+
+    enrollment_parser = add_enrollment_args(subparsers)
+    validation_parser = add_verification_args(subparsers)
 
     args = parser.parse_args()
     args.func(args)
