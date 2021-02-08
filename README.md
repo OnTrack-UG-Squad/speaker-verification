@@ -49,8 +49,7 @@ The speaker_verification tool has a enroll and validate workflow in order to per
 The enroll workflow requires two parameters, one being a unique numeric id that must be 9 characters long and a path to a wav or flac file of the users voice. Below is the required syntax and format for the this stage.
 
 ```bash
-
-python -m speaker_verification --id <ID_NUMBER> --audio-path <PATH/TO/FILE> enroll
+python -m speaker_verification enroll --id <ID_NUMBER> --audio-path <PATH/TO/FILE>
 ```
 
 ### Validate stage
@@ -58,8 +57,7 @@ python -m speaker_verification --id <ID_NUMBER> --audio-path <PATH/TO/FILE> enro
 The validate workflow retrives a user enrollment based on the given id parameter given and then uses the `--audio-path` input to accept an audio file as speaker input to verify against the given user enrollment.
 
 ```bash
-
-python -m speaker_verification --id <ID_NUMBER> --audio-path <PATH/TO/FILE> validate
+python -m speaker_verification validate --id <ID_NUMBER> --audio-path <PATH/TO/FILE>
 ```
 
 ## Testing
