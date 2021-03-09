@@ -22,6 +22,13 @@ def add_enrollment_args(subparser):
         help="Path to enrollment audio, required for baseline verification.",
     )
 
+    enrollment_parser.add_argument(
+        "--db-table",
+        type=str,
+        default="users",
+        help="Name of database table to contain user enrollment data.",
+    )
+
     return enrollment_parser
 
 
@@ -47,6 +54,13 @@ def add_verification_args(subparser):
         type=str,
         required=True,
         help="Path to verification audio, required for verification against enrollment audio.",
+    )
+
+    validation_parser.add_argument(
+        "--db-table",
+        type=str,
+        default="users",
+        help="Name of database table to contain user validation data.",
     )
 
     return validation_parser

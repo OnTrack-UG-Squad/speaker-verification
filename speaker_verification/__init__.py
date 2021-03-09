@@ -1,6 +1,6 @@
 from speaker_verification.deep_speaker.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from speaker_verification.model_evaluation import run_user_evaluation
-from speaker_verification.sql_utils import create_db_table, insert_db_row, select_db_row
+from speaker_verification.sql_utils import establish_sqlite_db, create_db_table, insert_db_row, select_db_row
 
 
 def validate_id(id):
@@ -27,9 +27,10 @@ def enroll_new_user(args):
     args : str
         Commandline arguments passed with argparse. Required arguments are args.id and args.audio_path
     """
+    establish_sqlite_db(args.db_table)
     validate_id(args.id)
     mfcc = sample_from_mfcc(read_mfcc(args.audio_path, SAMPLE_RATE), NUM_FRAMES)
-    insert_db_row("users", args.id, mfcc)
+    insert_db_row(args.db_table, args.id, mfcc)
 
 
 def validate_user(args):
@@ -43,7 +44,7 @@ def validate_user(args):
         Commandline arguments passed with argparse. Required arguments are args.id and args.audio_path
     """
     validate_id(args.id)
-    user_row = select_db_row("users", args.id)
+    user_row = select_db_row(args.db_table, args.id)
     mfcc = user_row[1]
     score = run_user_evaluation(mfcc, args.audio_path)
     print(f"User evaluation for {args.id} has a confidence of:")
