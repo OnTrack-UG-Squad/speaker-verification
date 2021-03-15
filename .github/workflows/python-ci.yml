@@ -28,7 +28,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Set pythonpath
         run: |
-          echo "PYTHONPATH=/home/runner/work/speech_verification_public/speech_verification_public/" >> $GITHUB_ENV
+          echo "PYTHONPATH=/home/runner/work/speaker-verification/speaker-verification/" >> $GITHUB_ENV
       - name: Test with pytest
         run: |
           pytest speaker_verification/
