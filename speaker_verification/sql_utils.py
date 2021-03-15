@@ -1,5 +1,5 @@
 import io
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname, join, exists
 import sqlite3
 
 import numpy as np
@@ -26,6 +26,12 @@ def convert_array(text):
 
 sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
+
+
+def establish_sqlite_db(table_name):
+    if not exists(DATABASE_PATH):
+        sqlite3.connect(DATABASE_PATH.split('/')[-1]).close()
+        create_db_table(table_name)
 
 
 def read_sqlite_table(table):
@@ -108,12 +114,8 @@ def select_db_row(table, id):
     try:
         with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
-
             rows = cur.execute(f"select * from {table} where id={id}")
             for row in rows:
-                print("Id: ", row[0])
-                print("mfcc: ", row[1])
-                print("\n")
                 return row
     except Exception as err:
         print("Database doesn't exist: ", err)
@@ -136,6 +138,6 @@ def insert_db_row(table, id, mfcc):
     try:
         with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
             cur = con.cursor()
-            cur.execute(f"insert into {table}(id, mfcc) values (?, ?)", (id, mfcc,))
+            cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
     except Exception as err:
         print("Database doesn't exist: ", err)
