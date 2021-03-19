@@ -1,0 +1,2 @@
+include  ./speaker_verification/SQL/*.db
+include ./speaker_verification/models/*
