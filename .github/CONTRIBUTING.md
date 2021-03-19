@@ -4,7 +4,7 @@
 
 - [GitHub Flow](https://guides.github.com/introduction/flow/index.html)
 - [Strive for Schemantic/Conventional Commits](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
-  - Like labels for your commits to help contextualise the contents of the commits
+  - Like labels for your commits to help contextualise the contents of the commits.
 - [Code Reviews](https://google.github.io/eng-practices/review/reviewer/)
   - Each Pull Request must have merging approval of at least one (ideally multiple) senior members before merging to main branch.
 
@@ -13,7 +13,7 @@
 - [GitHub Actions](https://github.com/features/actions)
   - Our CI is currently running tests with `pytest` and `codeQL` for security checks.
 - [pytest](https://docs.pytest.org/en/stable/)
-  - We develop our tests with pytest and use pytest-cov to generate coverage reports
+  - We develop our tests with pytest and use pytest-cov to generate coverage reports.
   - Tests in the repository should be passing to be merged into `main` or `development`.
   - Added functionality or methods should have tests in order to keep coverage consistant.
 
@@ -27,7 +27,7 @@
 ## Environment
 
 - pip/conda
-  - Follow the install guide [README](../README.md).
+  - Follow the install guide [README](../README.md#installation).
 
 ## Development Principles
 
