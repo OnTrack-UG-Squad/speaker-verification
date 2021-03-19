@@ -3,7 +3,7 @@ from speaker_verification import enroll_new_user, validate_user
 
 
 def add_enrollment_args(subparser):
-    enrollment_parser = subparser.add_parser(
+    enrollment_parser = subparsers.add_parser(
         "enroll",
         help="enroll help",
         description="Process new user enrolment for speaker verification",
@@ -35,7 +35,7 @@ def add_enrollment_args(subparser):
 
 
 def add_verification_args(subparser):
-    validation_parser = subparser.add_parser(
+    validation_parser = subparsers.add_parser(
         "validate",
         help="validate help",
         description="Validate user based off enrolment for speaker verification",
