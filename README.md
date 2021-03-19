@@ -47,6 +47,8 @@ The `speak-verification` package requires Python 3.8.*
 
 ### _Install via PyPI_
 
+The package [speaker-verification](https://pypi.org/project/speaker-verification/) is hosted on [PyPI](https://pypi.org/)
+
 ```
 pip install speaker-verification
 ```
