@@ -60,7 +60,7 @@ This project has both a `requirements.txt` and `environment.yml` file's, it is u
 The repository relies on the `speaker_verification` python module being on the `PYTHONPATH` which you should set before running.
 
 ```bash
-export PYTHONPATH=${PYTHONPATH}:/path/to/speech_verification_public/
+export PYTHONPATH=${PYTHONPATH}:/path/to/speaker-verification
 ```
 
 ### Installing miniconda
