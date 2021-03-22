@@ -7,6 +7,7 @@
   - Like labels for your commits to help contextualise the contents of the commits.
 - [Code Reviews](https://google.github.io/eng-practices/review/reviewer/)
   - Each Pull Request must have merging approval of at least one (ideally multiple) senior members before merging to main branch.
+  - Do not delete branches until the end of assessment each trimester.
 
 ## Continuous Integration (CI)
 
