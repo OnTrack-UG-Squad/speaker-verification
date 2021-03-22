@@ -93,7 +93,10 @@ pytest speaker_verification/
 
 ## Contributors
 
-This repository makes use of open source components initially developed by @philipperemy in the "Unofficial" `deep-speaker` project based on the research by Baidu, Inc. 
-See the [deep-speaker project here.](https://github.com/philipperemy/deep-speaker)
-See the [research paper here.](https://arxiv.org/pdf/1705.02304.pdf)
+For details on contributing to the project please read the [project contribution guidelines](.github/CONTRIBUTING.md).
 
+This repository makes use of open source components initially developed by @philipperemy in the "Unofficial" `deep-speaker` project based on the research by Baidu, Inc. 
+
+See the [deep-speaker project here.](https://github.com/philipperemy/deep-speaker)
+
+See the [research paper here.](https://arxiv.org/pdf/1705.02304.pdf)
