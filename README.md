@@ -13,9 +13,11 @@ The Speaker Verification project aims to utilize machine learning technologies t
     - [Enroll stage](#enroll-stage)
     - [Validate stage](#validate-stage)
 * [Installation](#installation)
-    - [Installing Miniconda](#installing-miniconda)
-    - [Conda environment](#conda-environment)
-    - [Virtualenv environment](#virtualenv-environment)
+    - [Install via PyPI](#install-via-pypi)
+    - [Install from Github](#install-from-github)
+        - [Installing Miniconda](#installing-miniconda)
+        - [Conda environment](#conda-environment)
+        - [Virtualenv environment](#virtualenv-environment)
 * [Testing](#testing)
 
 
@@ -41,12 +43,24 @@ python -m speaker_verification validate --id <ID_NUMBER> --audio-path <PATH/TO/F
 
 ## Installation
 
+The `speak-verification` package requires Python 3.8.* 
+
+### _Install via PyPI_
+
+The package [speaker-verification](https://pypi.org/project/speaker-verification/) is hosted on [PyPI](https://pypi.org/)
+
+```
+pip install speaker-verification
+```
+
+### _Install from Github_
+
 This project has both a `requirements.txt` and `environment.yml` file's, it is up to your discretion of what environment manager you should like to use.
 
 The repository relies on the `speaker_verification` python module being on the `PYTHONPATH` which you should set before running.
 
 ```bash
-export PYTHONPATH=${PYTHONPATH}:/path/to/speech_verification_public/
+export PYTHONPATH=${PYTHONPATH}:/path/to/speaker-verification
 ```
 
 ### Installing miniconda

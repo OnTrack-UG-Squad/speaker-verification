@@ -3,16 +3,18 @@ from speaker_verification import enroll_new_user, validate_user
 
 
 def add_enrollment_args(subparser):
-    enrollment_parser = subparsers.add_parser(
+    enrollment_parser = subparser.add_parser(
         "enroll",
         help="enroll help",
-        description="Process new user enrolment for speaker verification"
-
+        description="Process new user enrolment for speaker verification",
     )
     enrollment_parser.set_defaults(func=enroll_new_user)
 
     enrollment_parser.add_argument(
-        "--id", type=str, required=True, help="User identification for a new user.",
+        "--id",
+        type=str,
+        required=True,
+        help="User identification for a new user.",
     )
 
     enrollment_parser.add_argument(
@@ -33,10 +35,10 @@ def add_enrollment_args(subparser):
 
 
 def add_verification_args(subparser):
-    validation_parser = subparsers.add_parser(
+    validation_parser = subparser.add_parser(
         "validate",
         help="validate help",
-        description= "Validate user based off enrolment for speaker verification"
+        description="Validate user based off enrolment for speaker verification",
     )
     validation_parser.set_defaults(func=validate_user)
 
@@ -66,8 +68,7 @@ def add_verification_args(subparser):
     return validation_parser
 
 
-if __name__ == "__main__":
-
+def main():
     parser = argparse.ArgumentParser(
         description="A CLI tool for enrollment and validation on registered users for speaker verification."
     )
@@ -78,3 +79,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     args.func(args)
+
+
+if __name__ == "__main__":
+    main()
