@@ -1,6 +1,12 @@
+import logging
+
 from speaker_verification.deep_speaker.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from speaker_verification.model_evaluation import run_user_evaluation
 from speaker_verification.sql_utils import establish_sqlite_db, create_db_table, insert_db_row, select_db_row
+from speaker_verification.utils.logger import SpeakerVerificationLogger
+
+logger = SpeakerVerificationLogger(name=__file__)
+logger.setLevel(logging.INFO)
 
 
 def validate_id(id):
@@ -10,10 +16,10 @@ def validate_id(id):
         assert len(id) == 9
 
     except ValueError:
-        print("User Input Not a Valid ID.")
+        logger.error("User Input Not a Valid ID.")
         raise
     except AssertionError:
-        print("User Input Not a Valid length. ID must have a length of 9.")
+        logger.error("User Input Not a Valid length. ID must have a length of 9.")
         raise
 
 
@@ -47,5 +53,4 @@ def validate_user(args):
     user_row = select_db_row(args.db_table, args.id)
     mfcc = user_row[1]
     score = run_user_evaluation(mfcc, args.audio_path)
-    print(f"User evaluation for {args.id} has a confidence of:")
-    print(f"{round(score[0]*100, 2)}%")
+    logger.info(f"User evaluation for {args.id} has a confidence of: {round(score[0] * 100, 2)}%")

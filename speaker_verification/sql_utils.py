@@ -1,11 +1,19 @@
 import io
-from os.path import abspath, dirname, join, exists
+import logging
 import sqlite3
+from os.path import abspath, dirname, join, exists
 
 import numpy as np
 
+from speaker_verification.utils.logger import SpeakerVerificationLogger
 
 DATABASE_PATH = join(abspath(dirname(__file__)), "SQL", "sqlite.db")
+logger = SpeakerVerificationLogger(name=__file__)
+logger.setLevel(logging.INFO)
+
+
+class DatabaseError(Exception):
+    pass
 
 
 def adapt_array(arr):
@@ -28,13 +36,18 @@ sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
 
 
-def establish_sqlite_db(table_name):
-    if not exists(DATABASE_PATH):
-        sqlite3.connect(DATABASE_PATH.split('/')[-1]).close()
+def get_db_connection(database=DATABASE_PATH):
+    sqliteConnection = sqlite3.connect(database, detect_types=sqlite3.PARSE_DECLTYPES)
+    cur = sqliteConnection.cursor()
+    return sqliteConnection, cur
+
+def establish_sqlite_db(table_name, database=DATABASE_PATH):
+    if not exists(database):
+        sqlite3.connect(database.split('/')[-1]).close()
         create_db_table(table_name)
 
 
-def read_sqlite_table(table):
+def read_sqlite_table(table, database=DATABASE_PATH):
     """read_sqlite_table.
 
     print all records within users table.
@@ -42,28 +55,24 @@ def read_sqlite_table(table):
     Parameters
     ----------
     table : str
-        Name of table to remove record from.
+        Name of table to read record from.
     """
-    if isinstance(table, str):
-        try:
-            sqliteConnection = sqlite3.connect(DATABASE_PATH)
-            cur = sqliteConnection.cursor()
+ 
+    try:
+        _, cur = get_db_connection(database)
+        sqlite_select_query = f"select * from {table}"
+        cur.execute(sqlite_select_query)
+        records = cur.fetchall()
+        for row in records:
+            logger.info("Id: ", row[0])
+            logger.info("mfcc: ", type(row[1]))
 
-            sqlite_select_query = f"select * from {table}"
-            cur.execute(sqlite_select_query)
-            records = cur.fetchall()
-            for row in records:
-                print("Id: ", row[0])
-                print("mfcc: ", type(row[1]))
-                print("\n")
-
-        except sqlite3.Error as error:
-            print("Failed to read data from sqlite table", error)
-    else: 
-        raise TypeError("Table name must be string")
+    except sqlite3.Error as error:
+        logger.error("Failed to read data from sqlite table", error)
+        raise DatabaseError()
 
 
-def create_db_table(table):
+def create_db_table(table: str, database=DATABASE_PATH):
     """create_db_table.
 
     Creates a table within sqlite database to store user records.
@@ -73,20 +82,15 @@ def create_db_table(table):
     table : str
         Name of table to create.
     """
-    if isinstance(table, str):
-        try:
-            with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-                cur = con.cursor()
-                cur.execute(f"create table {table}(id integer primary key, arr array)")
-        except Exception as err:
-            print(f"Cannot create table for {table}: ", err)
-    else:
-        raise TypeError("Only strings are allowed")
-                
-   
+    try:
+        _, cur = get_db_connection(database)
+        cur.execute(f"create table {table}(id integer primary key, arr array)")
+    except Exception as err:
+        logger.error(f"Cannot create table for {table}: ", err)
+        raise DatabaseError()
 
 
-def remove_db_row(table, id):
+def remove_db_row(table: str, id: int, database=DATABASE_PATH):
     """remove_db_row.
 
     Removes row within sqlite table according to "id" and "table" parameters.
@@ -98,19 +102,15 @@ def remove_db_row(table, id):
     id : str
         Id key for required record within table for removal.
     """
-    if isinstance(table, str) and isinstance(id, int):
-        try:
-            with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-                cur = con.cursor()
-                cur.execute(f"delete from {table} where id={id}")
-        except Exception as err:
-            print(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
-    else:
-        raise TypeError("Ensure Table and ID are of vaild data type")
-    
+    try:
+        _, cur = get_db_connection(database)
+        cur.execute(f"delete from {table} where id={id}")
+    except Exception as err:
+        logger.error(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
+        raise DatabaseError()
 
 
-def select_db_row(table, id):
+def select_db_row(table: str, id: int, database=DATABASE_PATH):
     """select_db_row.
 
     Selects and prints out a row within a registered sqlite database table.
@@ -122,20 +122,16 @@ def select_db_row(table, id):
     id : str
         Id key for required record within table for selection.
     """
-    if (isinstance(table,str) and isinstance(id,int)):
-        try:
-            with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-                cur = con.cursor()
-                rows=cur.execute(f"select * from {table} where id={id}")   
-                for row in rows:
-                    return row
-        except Exception as err:
-            print("Database doesn't exist: ", err)
-    else:
-        raise TypeError("Table name must be string and ID must be integer")
+    try:
+        _, cur = get_db_connection(database)
+        rows = cur.execute(f"select * from {table} where id={id}")
+        for row in rows:
+            return row
+    except Exception as err:
+        logger.error("Database Error: ", err)
 
 
-def insert_db_row(table, id, mfcc):
+def insert_db_row(table: str, id: int, mfcc: np.array, database=DATABASE_PATH):
     """insert_db_row.
 
     Takes required parameters and inserts a record of given id and mfcc dataset into the sqlite database table specified.
@@ -149,16 +145,10 @@ def insert_db_row(table, id, mfcc):
     mfcc : numpy.array
         MFCC dataset to be inserted within database records.
     """
-    length = len(str(id))
-    if length==9:
-        if (isinstance(table,str) and isinstance(id,int) ):
-            try:
-                with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-                    cur = con.cursor()
-                    cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
-            except Exception as err:
-                print("Database doesn't exist: ", err)
-        else:
-            raise TypeError("Table name must be string and ID must be integer")
-    else:
-        raise Exception("Invalid Input")
+    try:
+        con, cur = get_db_connection(database)
+        cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
+        con.commit()
+    except Exception as err:
+        logger.error("Database Error: ", err)
+        raise DatabaseError()

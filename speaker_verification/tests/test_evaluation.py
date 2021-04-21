@@ -14,7 +14,7 @@ from speaker_verification.deep_speaker.rescnn_model import DeepSpeakerModel
 TEST_PATH = join(abspath(dirname(__file__)), "input")
 
 
-def test_VCSK_Corpus_speaker_scores():
+def test_model_evaluation_scores():
     np.random.seed(123)
     model = DeepSpeakerModel()
     model.rescnn.load_weights(MODEL_PATH, by_name=True)
@@ -33,3 +33,12 @@ def test_VCSK_Corpus_speaker_scores():
 
 def is_above_cosine_threshold(input_value):
     assert input_value > np.float32(0.75)
+
+
+@pytest.mark.parametrize("input_1", [np.arange(9).reshape(3, 3)])
+@pytest.mark.parametrize("input_2", [np.arange(3)])
+def test_batch_cosine_threshold(input_1, input_2):
+    np.random.seed(123)
+    np.testing.assert_allclose(batch_cosine_similarity(input_1, input_2), [5, 14, 23])
+    
+
