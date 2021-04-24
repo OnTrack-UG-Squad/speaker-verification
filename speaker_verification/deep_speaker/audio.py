@@ -8,7 +8,6 @@
 
 import logging
 import os
-from datetime import date
 from glob import glob
 from random import choice
 
@@ -18,12 +17,7 @@ from python_speech_features import fbank
 
 from speaker_verification.utils.logger import SpeakerVerificationLogger
 
-today = date.today()
-file_path = os.path.dirname(os.path.abspath(__file__))
-logger = SpeakerVerificationLogger(
-    name=__file__,
-    log_file=f'{file_path}/../logs/logs-{today.strftime("%d-%m-%Y")}.log'
-)
+logger = SpeakerVerificationLogger(name=__file__)
 logger.setLevel(logging.INFO)
 
 SAMPLE_RATE = 16000

@@ -1,9 +1,7 @@
 import argparse
 import csv
 import logging
-import os
 import pathlib
-from datetime import date
 from os.path import join, abspath, dirname
 
 import numpy as np
@@ -21,12 +19,7 @@ MODEL_PATH = join(
     abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5"
 )
 
-today = date.today()
-file_path = os.path.dirname(os.path.abspath(__file__))
-logger = SpeakerVerificationLogger(
-    name=__file__,
-    log_file=f'{file_path}/logs/logs-{today.strftime("%d-%m-%Y")}.log'
-)
+logger = SpeakerVerificationLogger(name=__file__)
 logger.setLevel(logging.INFO)
 
 

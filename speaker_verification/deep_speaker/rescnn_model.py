@@ -23,14 +23,8 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.models import Model
 from speaker_verification.deep_speaker.audio import NUM_FBANKS, NUM_FRAMES
 from speaker_verification.utils.logger import SpeakerVerificationLogger
-from datetime import date
 
-today = date.today()
-file_path = os.path.dirname(os.path.abspath(__file__))
-logger = SpeakerVerificationLogger(
-    name=__file__,
-    log_file=f'{file_path}/../logs/logs-{today.strftime("%d-%m-%Y")}.log'
-)
+logger = SpeakerVerificationLogger(name=__file__)
 logger.setLevel(logging.INFO)
 
 

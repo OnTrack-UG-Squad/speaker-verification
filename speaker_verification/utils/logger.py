@@ -1,24 +1,33 @@
 import logging
+
+from datetime import date
 from logging import Logger
 from logging.handlers import TimedRotatingFileHandler
+from os.path import abspath, dirname
 
 
 class SpeakerVerificationLogger(Logger):
     def __init__(
             self,
-            log_file: str,
-            name: str = __file__,
+            name: str,
+            log_file: str = "",
             log_format: str = '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             *args,
             **kwargs
     ):
+        if log_file == "":
+            file_path = dirname(abspath(__file__))
+            today = date.today()
+            self.log_file = f'{file_path}/../logs/{today.strftime("%d-%m-%Y")}.log'
+        else:
+            self.log_file = log_file
+
         self.formatter = logging.Formatter(log_format)
-        self.log_file = log_file
 
         Logger.__init__(self, name, *args, **kwargs)
 
         self.addHandler(self.get_console_handler())
-        if log_file:
+        if self.log_file:
             self.addHandler(self.get_file_handler())
 
         # with this pattern, it's rarely necessary to propagate the| error up to parent

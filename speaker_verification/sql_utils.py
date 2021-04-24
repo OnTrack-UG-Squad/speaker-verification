@@ -1,8 +1,6 @@
 import io
 import logging
-import os
 import sqlite3
-from datetime import date
 from os.path import abspath, dirname, join, exists
 
 import numpy as np
@@ -10,12 +8,7 @@ import numpy as np
 from speaker_verification.utils.logger import SpeakerVerificationLogger
 
 DATABASE_PATH = join(abspath(dirname(__file__)), "SQL", "sqlite.db")
-today = date.today()
-file_path = os.path.dirname(os.path.abspath(__file__))
-logger = SpeakerVerificationLogger(
-    name=__file__,
-    log_file=f'{file_path}/logs/logs-{today.strftime("%d-%m-%Y")}.log'
-)
+logger = SpeakerVerificationLogger(name=__file__)
 logger.setLevel(logging.INFO)
 
 
@@ -67,7 +60,7 @@ def read_sqlite_table(table):
             logger.info("mfcc: ", type(row[1]))
 
     except sqlite3.Error as error:
-        logger.info("Failed to read data from sqlite table", error)
+        logger.error("Failed to read data from sqlite table", error)
 
 
 def create_db_table(table):

@@ -1,18 +1,11 @@
 import logging
-import os
-from datetime import date
 
 from speaker_verification.deep_speaker.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from speaker_verification.model_evaluation import run_user_evaluation
 from speaker_verification.sql_utils import establish_sqlite_db, create_db_table, insert_db_row, select_db_row
 from speaker_verification.utils.logger import SpeakerVerificationLogger
 
-today = date.today()
-file_path = os.path.dirname(os.path.abspath(__file__))
-logger = SpeakerVerificationLogger(
-    name=__file__,
-    log_file=f'{file_path}/logs/logs-{today.strftime("%d-%m-%Y")}.log'
-)
+logger = SpeakerVerificationLogger(name=__file__)
 logger.setLevel(logging.INFO)
 
 
@@ -23,10 +16,10 @@ def validate_id(id):
         assert len(id) == 9
 
     except ValueError:
-        # logger.error("User Input Not a Valid ID.")
+        logger.error("User Input Not a Valid ID.")
         raise
     except AssertionError:
-        # logger.error("User Input Not a Valid length. ID must have a length of 9.")
+        logger.error("User Input Not a Valid length. ID must have a length of 9.")
         raise
 
 
