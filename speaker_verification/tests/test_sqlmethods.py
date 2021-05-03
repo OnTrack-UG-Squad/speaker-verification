@@ -15,74 +15,75 @@ from speaker_verification.sql_utils import(
 
 table_id = 219944922
 mfcc=np.array([1,2,3])
-create_db_table("unit_test")
-insert_db_row("unit_test", table_id, mfcc)
-table_id = 219941122
-mfcc=np.array([1,2,4,5,3])
-insert_db_row("unit_test", table_id, mfcc)
-  
 
-def test_select_db_row_returns_expected_row():
-    '''Method test to check by trying to select the row passing in 
-      valid values for each of the columns
-    '''
-    #Arange
-    expected=(219944922,np.array([1,2,3]))
-    #act
-    rows=select_db_row("unit_test", 219944922)
-    
-    #assert
-    assert rows[0]==expected[0] 
-    assert all ([a == b for a,b in zip(rows[1],expected[1])])
+def test_database():
+    """Method test for valid datbase"""
+    try:
+        assert select_db_row("asbjasn",111111111)
+    except AssertionError:
+        return "Datbase does not exist"
 
-def test_select_db_row_returns_no_value():
-    '''Method test to check by trying to select the row passing in 
-      invalid values for student id that does not exist in the table
-    '''
-    #Arange 
-    expected = None
-    #Act
-    rows=select_db_row("unit_test", 219942322)
-    #Assert
-    assert expected == rows
+def test_create_table():
+    """Method test to check if table can be created"""
+    try:
+        assert create_db_table("mock_table")
+    except AssertionError:
+        return "Could not establish connection"
 
-def test_insert_db_row_valid():
+def test_create_invalid_table():
+    """ Method test to check if table will be created by sending invaid name
+        by passing through the parameter as an integer"""
+    with pytest.raises(TypeError):
+        create_db_table(112223444)
+
+def test_insert_table(): 
+    '''Method test to check by trying to unsert values in the table 
+        by passing in valid values for each parameter'''
+    try:
+        assert insert_db_row("mock_table",table_id,mfcc)
+    except AssertionError:
+        return "Insertion error."
+
+def test_insert_invalid_table():
     '''Method test to check by trying to insert the row passing in 
-    valid values for student id and select that row using relevant method
+        table with valid values for each of the columns or with invalid table name
     '''
-    #Arange
-    expected = (218008432,np.array([2,3,4]))
-    #Act
-    insert_db_row("unit_test", 218008432, np.array([2,3,4]))
-    rows = select_db_row("unit_test", 218008432)
-    #Assert
-    assert rows[0] == expected[0] 
-    assert all ([a == b for a,b in zip(rows[1],expected[1])])
+    with pytest.raises(TypeError):
+        insert_db_row(1223,219249449,2331212)
+    with pytest.raises(Exception):
+        insert_db_row("mock_table",211221,1123)
 
-def test_insert_db_row_invalid():
-    '''Method test to insert data to the table with invalid 
-    value for the column 
+def test_select_row():
+    '''Method test to check by trying to select the row passing in 
+            valid values for each of the columns
     '''
-    #Arange
-    expected = None
-    #Act
-    #try to insert a data record with invalid student ID
-    insert_db_row("unit_test","string",np.array([2,3,4]))
-    #check whether the data record was inserted or not
-    rows=select_db_row("unit_test","string")
-    #Assert
-    assert expected == rows
+    try:
+        assert select_db_row("hello",123344433)
+    except AssertionError:
+        return "Error selecting the row."
+        
+def test_select_invalid_row():
+    '''Method test to check by trying to select the row passing in 
+    invaid values for each of the columns
+    '''
+    with pytest.raises(TypeError):
+       select_db_row(11223355,123456789)
+       select_db_row("mock_table", "124565")
 
-def test_removes_db_row():
-    ''' Method test to remove the data from table with valid 
+def test_remove_db_row():
+    '''Method test to remove the data from table with valid 
     values for each of the column names
     '''
-    #Arange
-    expected = None
-    #Act: remove an existing row
-    remove_db_row("unit_test",219941122)
-    #select the deleted row, should return null
-    rows=select_db_row("unit_test",219941122)
-    #Assert
-    assert rows == expected
-    
+    try:
+        assert remove_db_row("mock_table",table_id)
+    except AssertionError:
+        return "Unable to remove row in db table."
+   
+def test_remove_invaild_db_row():
+    '''Method test to remove the data from table with invalid 
+    values for each of the column names
+    '''
+    with pytest.raises(TypeError):
+        remove_db_row(1223,219249449)
+    with pytest.raises(TypeError):
+        remove_db_row("mock_table","211221")
