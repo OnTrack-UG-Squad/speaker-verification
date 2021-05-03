@@ -28,13 +28,13 @@ sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
 
 
-def establish_sqlite_db(table_name:str):
+def establish_sqlite_db(table_name):
     if not exists(DATABASE_PATH):
         sqlite3.connect(DATABASE_PATH.split('/')[-1]).close()
         create_db_table(table_name)
 
 
-def read_sqlite_table(table:str):
+def read_sqlite_table(table):
     """read_sqlite_table.
 
     print all records within users table.
