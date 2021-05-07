@@ -62,8 +62,7 @@ def read_sqlite_table(table, database=DATABASE_PATH):
 
     except sqlite3.Error as error:
         print("Failed to read data from sqlite table", error)
-    
-    
+
 
 def create_db_table(table: str, database=DATABASE_PATH):
     """create_db_table.
@@ -80,7 +79,8 @@ def create_db_table(table: str, database=DATABASE_PATH):
         cur.execute(f"create table {table}(id integer primary key, arr array)")
     except Exception as err:
         print(f"Cannot create table for {table}: ", err)
-                
+
+
 def remove_db_row(table: str, id: int, database=DATABASE_PATH):
     """remove_db_row.
 
@@ -98,7 +98,8 @@ def remove_db_row(table: str, id: int, database=DATABASE_PATH):
         cur.execute(f"delete from {table} where id={id}")
     except Exception as err:
         print(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
-       
+
+
 def select_db_row(table: str, id: int, database=DATABASE_PATH):
     """select_db_row.
 
@@ -113,13 +114,14 @@ def select_db_row(table: str, id: int, database=DATABASE_PATH):
     """
     try:
         _, cur = get_db_connection(database)
-        rows=cur.execute(f"select * from {table} where id={id}")   
+        rows = cur.execute(f"select * from {table} where id={id}")
         for row in rows:
             return row
     except Exception as err:
-        print("Database doesn't exist: ", err)
-    
-def insert_db_row(table: str, id: int, mfcc: list, database=DATABASE_PATH):
+        print("Database Error: ", err)
+
+
+def insert_db_row(table: str, id: int, mfcc: np.array, database=DATABASE_PATH):
     """insert_db_row.
 
     Takes required parameters and inserts a record of given id and mfcc dataset into the sqlite database table specified.
@@ -134,9 +136,8 @@ def insert_db_row(table: str, id: int, mfcc: list, database=DATABASE_PATH):
         MFCC dataset to be inserted within database records.
     """
     try:
-        _, cur = get_db_connection(database)
+        con, cur = get_db_connection(database)
         cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
+        con.commit()
     except Exception as err:
         print("Database doesn't exist: ", err)
-
-
