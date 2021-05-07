@@ -28,13 +28,18 @@ sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
 
 
-def establish_sqlite_db(table_name):
-    if not exists(DATABASE_PATH):
-        sqlite3.connect(DATABASE_PATH.split('/')[-1]).close()
+def get_db_connection(database=DATABASE_PATH):
+    sqliteConnection = sqlite3.connect(database, detect_types=sqlite3.PARSE_DECLTYPES)
+    cur = sqliteConnection.cursor()
+    return sqliteConnection, cur
+
+def establish_sqlite_db(table_name, database=DATABASE_PATH):
+    if not exists(database):
+        sqlite3.connect(database.split('/')[-1]).close()
         create_db_table(table_name)
 
 
-def read_sqlite_table(table):
+def read_sqlite_table(table, database=DATABASE_PATH):
     """read_sqlite_table.
 
     print all records within users table.
@@ -46,9 +51,7 @@ def read_sqlite_table(table):
     """
  
     try:
-        sqliteConnection = sqlite3.connect(DATABASE_PATH)
-        cur = sqliteConnection.cursor()
-
+        _, cur = get_db_connection(database)
         sqlite_select_query = f"select * from {table}"
         cur.execute(sqlite_select_query)
         records = cur.fetchall()
@@ -62,7 +65,7 @@ def read_sqlite_table(table):
     
     
 
-def create_db_table(table: str):
+def create_db_table(table: str, database=DATABASE_PATH):
     """create_db_table.
 
     Creates a table within sqlite database to store user records.
@@ -73,13 +76,12 @@ def create_db_table(table: str):
         Name of table to create.
     """
     try:
-        with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-            cur = con.cursor()
-            cur.execute(f"create table {table}(id integer primary key, arr array)")
+        _, cur = get_db_connection(database)
+        cur.execute(f"create table {table}(id integer primary key, arr array)")
     except Exception as err:
         print(f"Cannot create table for {table}: ", err)
                 
-def remove_db_row(table: str, id: int):
+def remove_db_row(table: str, id: int, database=DATABASE_PATH):
     """remove_db_row.
 
     Removes row within sqlite table according to "id" and "table" parameters.
@@ -92,13 +94,12 @@ def remove_db_row(table: str, id: int):
         Id key for required record within table for removal.
     """
     try:
-        with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-            cur = con.cursor()
-            cur.execute(f"delete from {table} where id={id}")
+        _, cur = get_db_connection(database)
+        cur.execute(f"delete from {table} where id={id}")
     except Exception as err:
         print(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
        
-def select_db_row(table: str, id: int):
+def select_db_row(table: str, id: int, database=DATABASE_PATH):
     """select_db_row.
 
     Selects and prints out a row within a registered sqlite database table.
@@ -111,15 +112,14 @@ def select_db_row(table: str, id: int):
         Id key for required record within table for selection.
     """
     try:
-        with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-            cur = con.cursor()
-            rows=cur.execute(f"select * from {table} where id={id}")   
-            for row in rows:
-                return row
+        _, cur = get_db_connection(database)
+        rows=cur.execute(f"select * from {table} where id={id}")   
+        for row in rows:
+            return row
     except Exception as err:
         print("Database doesn't exist: ", err)
     
-def insert_db_row(table: str, id: int, mfcc: list):
+def insert_db_row(table: str, id: int, mfcc: list, database=DATABASE_PATH):
     """insert_db_row.
 
     Takes required parameters and inserts a record of given id and mfcc dataset into the sqlite database table specified.
@@ -134,9 +134,8 @@ def insert_db_row(table: str, id: int, mfcc: list):
         MFCC dataset to be inserted within database records.
     """
     try:
-        with sqlite3.connect(DATABASE_PATH, detect_types=sqlite3.PARSE_DECLTYPES) as con:
-            cur = con.cursor()
-            cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
+        _, cur = get_db_connection(database)
+        cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
     except Exception as err:
         print("Database doesn't exist: ", err)
 
