@@ -1,7 +1,8 @@
 import argparse
-from os.path import join, abspath, dirname
 import csv
+import logging
 import pathlib
+from os.path import join, abspath, dirname
 
 import numpy as np
 
@@ -12,11 +13,14 @@ from speaker_verification.deep_speaker.audio import (
     sample_from_mfcc,
 )
 from speaker_verification.deep_speaker.rescnn_model import DeepSpeakerModel
-
+from speaker_verification.utils.logger import SpeakerVerificationLogger
 
 MODEL_PATH = join(
     abspath(dirname(__file__)), "models", "ResCNN_triplet_training_checkpoint_265.h5"
 )
+
+logger = SpeakerVerificationLogger(name=__file__)
+logger.setLevel(logging.INFO)
 
 
 def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv, dataset_path):
@@ -32,7 +36,7 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv, dataset_path):
 
     audio_results = []
     for audio_file in audio_list:
-        print(f"audio file: {audio_file}")
+        logger.info(f"audio file: {audio_file}")
         if audio_file.is_file():
             audio_results.append(run_model_evaluation(audio_file, model, raw_audio=True))
 
@@ -45,9 +49,9 @@ def run_VCSK_Corpus_data(speaker_1, speaker_2, to_csv, dataset_path):
     if to_csv is True:
         append_results_to_csv((speaker_1, speaker_2), (s1_to_s1, s1_to_s2))
     else:
-        print(f"{speaker_1} and {speaker_2} complete")
-        print(f"{speaker_1} baseline score: {s1_to_s1}")
-        print(f"{speaker_1} and {speaker_2}  simularity score: {s1_to_s2}")
+        logger.info(f"{speaker_1} and {speaker_2} complete")
+        logger.info(f"{speaker_1} baseline score: {s1_to_s1}")
+        logger.info(f"{speaker_1} and {speaker_2}  simularity score: {s1_to_s2}")
 
 
 def run_model_evaluation(audio_input, model, raw_audio=False):
@@ -133,7 +137,7 @@ if __name__ == "__main__":
     dataset_path = "INSERT_PATH_HERE"
     if args.run_all is True:
         for i in range(255, 360):
-            run_VCSK_Corpus_data(f"p{i}", f"p{i+1}", args.to_csv, dataset_path)
+            run_VCSK_Corpus_data(f"p{i}", f"p{i + 1}", args.to_csv, dataset_path)
 
     else:
         run_VCSK_Corpus_data(args.speaker_1, args.speaker_2, args.to_csv, dataset_path)

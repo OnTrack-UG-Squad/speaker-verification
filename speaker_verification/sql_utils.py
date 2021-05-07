@@ -1,11 +1,15 @@
 import io
-from os.path import abspath, dirname, join, exists
+import logging
 import sqlite3
+from os.path import abspath, dirname, join, exists
 
 import numpy as np
 
+from speaker_verification.utils.logger import SpeakerVerificationLogger
 
 DATABASE_PATH = join(abspath(dirname(__file__)), "SQL", "sqlite.db")
+logger = SpeakerVerificationLogger(name=__file__)
+logger.setLevel(logging.INFO)
 
 
 def adapt_array(arr):
@@ -56,12 +60,11 @@ def read_sqlite_table(table, database=DATABASE_PATH):
         cur.execute(sqlite_select_query)
         records = cur.fetchall()
         for row in records:
-            print("Id: ", row[0])
-            print("mfcc: ", type(row[1]))
-            print("\n")
+            logger.info("Id: ", row[0])
+            logger.info("mfcc: ", type(row[1]))
 
     except sqlite3.Error as error:
-        print("Failed to read data from sqlite table", error)
+        logger.error("Failed to read data from sqlite table", error)
 
 
 def create_db_table(table: str, database=DATABASE_PATH):
@@ -78,7 +81,7 @@ def create_db_table(table: str, database=DATABASE_PATH):
         _, cur = get_db_connection(database)
         cur.execute(f"create table {table}(id integer primary key, arr array)")
     except Exception as err:
-        print(f"Cannot create table for {table}: ", err)
+        logger.error(f"Cannot create table for {table}: ", err)
 
 
 def remove_db_row(table: str, id: int, database=DATABASE_PATH):
@@ -97,7 +100,7 @@ def remove_db_row(table: str, id: int, database=DATABASE_PATH):
         _, cur = get_db_connection(database)
         cur.execute(f"delete from {table} where id={id}")
     except Exception as err:
-        print(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
+        logger.error(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
 
 
 def select_db_row(table: str, id: int, database=DATABASE_PATH):
@@ -118,7 +121,7 @@ def select_db_row(table: str, id: int, database=DATABASE_PATH):
         for row in rows:
             return row
     except Exception as err:
-        print("Database Error: ", err)
+        logger.error("Database Error: ", err)
 
 
 def insert_db_row(table: str, id: int, mfcc: np.array, database=DATABASE_PATH):
@@ -140,4 +143,4 @@ def insert_db_row(table: str, id: int, mfcc: np.array, database=DATABASE_PATH):
         cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
         con.commit()
     except Exception as err:
-        print("Database doesn't exist: ", err)
+        logger.error("Database doesn't exist: ", err)
