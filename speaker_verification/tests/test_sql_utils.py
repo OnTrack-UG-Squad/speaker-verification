@@ -34,10 +34,9 @@ def test_select_db_row_returns_expected_row(test_db):
     """Method test to check by trying to select the row passing in
        valid values for each of the columns
     """
-    # Arange
     expected = (219944922, np.array([1, 2, 3]))
     rows = select_db_row("unit_test", 219944922, test_db)
-    # assert
+
     assert rows[0] == expected[0]
     assert all([a == b for a, b in zip(rows[1], expected[1])])
 
@@ -46,11 +45,9 @@ def test_select_db_row_returns_no_value(test_db):
     """Method test to check by trying to select the row passing in
       invalid values for student id that does not exist in the table
     """
-    # Arange
     expected = None
-    # Act
     rows = select_db_row("unit_test", 219942322, test_db)
-    # Assert
+
     assert expected == rows
 
 
@@ -58,12 +55,11 @@ def test_insert_db_row_valid(test_db):
     """Method test to check by trying to insert the row passing in
     valid values for student id and select that row using relevant method
     """
-    # Arange
     expected = (218008432, np.array([2, 3, 4]))
-    # Act
+
     insert_db_row("unit_test", 218008432, np.array([2, 3, 4]), test_db)
     rows = select_db_row("unit_test", 218008432, test_db)
-    # Assert
+
     assert rows[0] == expected[0]
     assert all([a == b for a, b in zip(rows[1], expected[1])])
 
@@ -72,14 +68,11 @@ def test_insert_db_row_invalid(test_db):
     """Method test to insert data to the table with invalid
     value for the column
     """
-    # Arange
     expected = None
-    # Act
-    # try to insert a data record with invalid student ID
+
     insert_db_row("unit_test", "string", np.array([2, 3, 4]), test_db)
-    # check whether the data record was inserted or not
     rows = select_db_row("unit_test", "string", test_db)
-    # Assert
+
     assert expected == rows
 
 
@@ -87,11 +80,9 @@ def test_removes_db_row():
     """ Method test to remove the data from table with valid
     values for each of the column names
     """
-    # Arange
     expected = None
-    # Act: remove an existing row
+
     remove_db_row("unit_test", 219941122, test_db)
-    # select the deleted row, should return null
     rows = select_db_row("unit_test", 219941122, test_db)
-    # Assert
+
     assert rows == expected
