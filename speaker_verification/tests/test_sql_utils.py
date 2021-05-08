@@ -8,6 +8,7 @@ from speaker_verification.sql_utils import (
     remove_db_row,
     select_db_row,
     get_db_connection,
+    DatabaseError,
 )
 
 
@@ -68,21 +69,13 @@ def test_insert_db_row_invalid(test_db):
     """Method test to insert data to the table with invalid
     value for the column
     """
-    expected = None
-
-    insert_db_row("unit_test", "string", np.array([2, 3, 4]), test_db)
-    rows = select_db_row("unit_test", "string", test_db)
-
-    assert expected == rows
+    with pytest.raises(DatabaseError):
+        insert_db_row("unit_test", "string", np.array([2, 3, 4]), test_db)
 
 
 def test_removes_db_row():
     """ Method test to remove the data from table with valid
     values for each of the column names
     """
-    expected = None
-
-    remove_db_row("unit_test", 219941122, test_db)
-    rows = select_db_row("unit_test", 219941122, test_db)
-
-    assert rows == expected
+    with pytest.raises(DatabaseError):
+        remove_db_row("unit_test", 219941122, test_db)

@@ -12,6 +12,10 @@ logger = SpeakerVerificationLogger(name=__file__)
 logger.setLevel(logging.INFO)
 
 
+class DatabaseError(Exception):
+    pass
+
+
 def adapt_array(arr):
     """
     http://stackoverflow.com/a/31312102/190597 (SoulNibbler)
@@ -65,6 +69,7 @@ def read_sqlite_table(table, database=DATABASE_PATH):
 
     except sqlite3.Error as error:
         logger.error("Failed to read data from sqlite table", error)
+        raise DatabaseError()
 
 
 def create_db_table(table: str, database=DATABASE_PATH):
@@ -82,6 +87,7 @@ def create_db_table(table: str, database=DATABASE_PATH):
         cur.execute(f"create table {table}(id integer primary key, arr array)")
     except Exception as err:
         logger.error(f"Cannot create table for {table}: ", err)
+        raise DatabaseError()
 
 
 def remove_db_row(table: str, id: int, database=DATABASE_PATH):
@@ -101,6 +107,7 @@ def remove_db_row(table: str, id: int, database=DATABASE_PATH):
         cur.execute(f"delete from {table} where id={id}")
     except Exception as err:
         logger.error(f"Database row doesn't exist for id ({id}) in table ({table}): ", err)
+        raise DatabaseError()
 
 
 def select_db_row(table: str, id: int, database=DATABASE_PATH):
@@ -143,4 +150,5 @@ def insert_db_row(table: str, id: int, mfcc: np.array, database=DATABASE_PATH):
         cur.execute(f"insert into {table}(id, arr) values (?, ?)", (id, mfcc,))
         con.commit()
     except Exception as err:
-        logger.error("Database doesn't exist: ", err)
+        logger.error("Database Error: ", err)
+        raise DatabaseError()
