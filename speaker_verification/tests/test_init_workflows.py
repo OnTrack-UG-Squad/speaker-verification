@@ -61,8 +61,7 @@ def test_validate_user_does_not_exist():
         
 @pytest.mark.integtest
 def test_validate_user_invalid_id():
-        ''' Try to validate the user by passing invalid argument for id parameter 
-    ''' 
+    ''' Try to validate the user by passing invalid argument for id parameter ''' 
     with pytest.raises(AssertionError):
         validate_user(arg_validate_invalid_id)
         os.remove(database_path)
