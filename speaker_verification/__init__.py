@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from speaker_verification.deep_speaker.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
 from speaker_verification.model_evaluation import run_user_evaluation
@@ -53,4 +54,11 @@ def validate_user(args):
     user_row = select_db_row(args.db_table, args.id)
     mfcc = user_row[1]
     score = run_user_evaluation(mfcc, args.audio_path)
-    logger.info(f"User evaluation for {args.id} has a confidence of: {round(score[0] * 100, 2)}%")
+    result = round(score[0] * 100, 2)
+    score_to_stdout(result)
+    logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
+
+
+def score_to_stdout(score):
+    return sys.stdout.write(f"{score}")
+
