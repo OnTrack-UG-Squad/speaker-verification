@@ -78,7 +78,11 @@ def main():
     validation_parser = add_verification_args(subparsers)
 
     args = parser.parse_args()
-    args.func(args)
+    try:
+        args.func(args)
+    except AttributeError:
+        parser.print_help()
+        parser.exit()
 
 
 if __name__ == "__main__":
