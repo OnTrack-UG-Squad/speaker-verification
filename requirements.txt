@@ -7,3 +7,12 @@ numpy==1.18.5
 python-speech-features==0.6
 tensorflow>=2.1.0
 pytest
+torch>=1.0.1
+typing
+matplotlib>=3.0.0
+sounddevice
+tqdm
+umap-learn
+webrtcvad>=2.0.10
+scipy>=1.2.1
+typing
