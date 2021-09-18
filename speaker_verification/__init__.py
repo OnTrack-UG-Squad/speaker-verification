@@ -53,9 +53,9 @@ def validate_user(args):
     validate_id(args.id)
     user_row = select_db_row(args.db_table, args.id)
     mfcc = user_row[1]
-    score = run_user_evaluation(mfcc, args.audio_path)
-    result = round(score[0] * 100, 2)
-    score_to_stdout(result)
+    # score = run_user_evaluation(mfcc, args.audio_path)
+    # result = round(score[0] * 100, 2)
+    # score_to_stdout(result)
     # logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
 
 
