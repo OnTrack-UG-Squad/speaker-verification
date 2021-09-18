@@ -59,6 +59,6 @@ def validate_user(args):
     # logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
 
 
-def score_to_stdout(score):
-    return sys.stdout.write(f"{score}")
+# def score_to_stdout(score):
+#     return sys.stdout.write(f"{score}")
 
