@@ -56,7 +56,7 @@ def validate_user(args):
     score = run_user_evaluation(mfcc, args.audio_path)
     result = round(score[0] * 100, 2)
     score_to_stdout(result)
-    logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
+    # logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
 
 
 def score_to_stdout(score):
