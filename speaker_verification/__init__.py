@@ -1,9 +1,19 @@
 import logging
 import sys
 
-from speaker_verification.deep_speaker.audio import NUM_FRAMES, SAMPLE_RATE, read_mfcc, sample_from_mfcc
+from speaker_verification.deep_speaker.audio import (
+    NUM_FRAMES,
+    SAMPLE_RATE,
+    read_mfcc,
+    sample_from_mfcc,
+)
 from speaker_verification.model_evaluation import run_user_evaluation
-from speaker_verification.sql_utils import establish_sqlite_db, create_db_table, insert_db_row, select_db_row
+from speaker_verification.sql_utils import (
+    establish_sqlite_db,
+    create_db_table,
+    insert_db_row,
+    select_db_row,
+)
 from speaker_verification.utils.logger import SpeakerVerificationLogger
 
 logger = SpeakerVerificationLogger(name=__file__)
@@ -53,12 +63,11 @@ def validate_user(args):
     validate_id(args.id)
     user_row = select_db_row(args.db_table, args.id)
     mfcc = user_row[1]
-    # score = run_user_evaluation(mfcc, args.audio_path)
-    # result = round(score[0] * 100, 2)
-    # score_to_stdout(result)
-    # logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
+    score = run_user_evaluation(mfcc, args.audio_path)
+    result = round(score[0] * 100, 2)
+    score_to_stdout(result)
+    logger.info(f"User evaluation for {args.id} has a confidence of: {result}%")
 
 
-# def score_to_stdout(score):
-#     return sys.stdout.write(f"{score}")
-
+def score_to_stdout(score):
+    return sys.stdout.write(f"{score}")
