@@ -36,9 +36,9 @@ setuptools.setup(
         "numba ==0.48.0",
         "numpy ==1.18.5",
         "python-speech-features ==0.6",
-        "tensorflow>=2.3.0",
+        "tensorflow >=2.3.0",
         "pytest",
-        "noisereduce~=1.1.0",
-        "scipy<1.6.0"
+        "noisereduce ~=1.1.0",
+        "scipy <1.6.0"
     ]
 )
