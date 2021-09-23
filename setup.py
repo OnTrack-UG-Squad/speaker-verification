@@ -26,7 +26,7 @@ setuptools.setup(
     ],
     package_dir={"": "."},
     packages=setuptools.find_packages(where="."),
-    python_requires = [">=3.8", "<3.9"],
+    python_requires = [">=3.7", "<3.9"],
     zip_safe = True,
     include_package_data = True,
     install_requires = [
